@@ -27,22 +27,26 @@ public class AddColumn
 {
     private final QualifiedName name;
     private final ColumnDefinition column;
+    private final boolean tableNameExists;
+    private final boolean columnNameNotExists;
 
-    public AddColumn(QualifiedName name, ColumnDefinition column)
+    public AddColumn(QualifiedName name, ColumnDefinition column, boolean tableNameExists, boolean columnNameNotExists)
     {
-        this(Optional.empty(), name, column);
+        this(Optional.empty(), name, column, tableNameExists, columnNameNotExists);
     }
 
-    public AddColumn(NodeLocation location, QualifiedName name, ColumnDefinition column)
+    public AddColumn(NodeLocation location, QualifiedName name, ColumnDefinition column, boolean tableNameExists, boolean columnNameNotExists)
     {
-        this(Optional.of(location), name, column);
+        this(Optional.of(location), name, column, tableNameExists, columnNameNotExists);
     }
 
-    private AddColumn(Optional<NodeLocation> location, QualifiedName name, ColumnDefinition column)
+    private AddColumn(Optional<NodeLocation> location, QualifiedName name, ColumnDefinition column, boolean tableNameExists, boolean columnNameNotExists)
     {
         super(location);
         this.name = requireNonNull(name, "table is null");
         this.column = requireNonNull(column, "column is null");
+        this.tableNameExists = tableNameExists;
+        this.columnNameNotExists = columnNameNotExists;
     }
 
     public QualifiedName getName()
@@ -53,6 +57,16 @@ public class AddColumn
     public ColumnDefinition getColumn()
     {
         return column;
+    }
+
+    public boolean isTableNameExists()
+    {
+        return tableNameExists;
+    }
+
+    public boolean isColumnNameNotExists()
+    {
+        return columnNameNotExists;
     }
 
     @Override

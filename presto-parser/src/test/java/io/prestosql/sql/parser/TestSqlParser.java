@@ -1580,13 +1580,31 @@ public class TestSqlParser
                 .ignoringLocation()
                 .isEqualTo(new AddColumn(
                         QualifiedName.of("foo", "t"),
-                        new ColumnDefinition(identifier("c"), simpleType(location(1, 31), "bigint"), true, emptyList(), Optional.empty())));
+                        new ColumnDefinition(identifier("c"), simpleType(location(1, 31), "bigint"), true, emptyList(), Optional.empty()), false, false));
 
         assertThat(statement("ALTER TABLE foo.t ADD COLUMN d double NOT NULL"))
                 .ignoringLocation()
                 .isEqualTo(new AddColumn(
                         QualifiedName.of("foo", "t"),
-                        new ColumnDefinition(identifier("d"), simpleType(location(1, 31), "double"), false, emptyList(), Optional.empty())));
+                        new ColumnDefinition(identifier("d"), simpleType(location(1, 31), "double"), false, emptyList(), Optional.empty()), false, false));
+
+        assertThat(statement("ALTER TABLE IF EXISTS foo.t ADD COLUMN d double NOT NULL"))
+                .ignoringLocation()
+                .isEqualTo(new AddColumn(
+                        QualifiedName.of("foo", "t"),
+                        new ColumnDefinition(identifier("d"), simpleType(location(1, 31), "double"), false, emptyList(), Optional.empty()), true, false));
+
+        assertThat(statement("ALTER TABLE foo.t ADD COLUMN IF NOT EXISTS d double NOT NULL"))
+                .ignoringLocation()
+                .isEqualTo(new AddColumn(
+                        QualifiedName.of("foo", "t"),
+                        new ColumnDefinition(identifier("d"), simpleType(location(1, 31), "double"), false, emptyList(), Optional.empty()), false, true));
+
+        assertThat(statement("ALTER TABLE IF EXISTS foo.t ADD COLUMN IF NOT EXISTS d double NOT NULL"))
+                .ignoringLocation()
+                .isEqualTo(new AddColumn(
+                        QualifiedName.of("foo", "t"),
+                        new ColumnDefinition(identifier("d"), simpleType(location(1, 31), "double"), false, emptyList(), Optional.empty()), true, true));
     }
 
     @Test

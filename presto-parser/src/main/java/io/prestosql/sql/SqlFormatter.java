@@ -1108,10 +1108,16 @@ public final class SqlFormatter
         @Override
         protected Void visitAddColumn(AddColumn node, Integer indent)
         {
-            builder.append("ALTER TABLE ")
-                    .append(node.getName())
-                    .append(" ADD COLUMN ")
-                    .append(formatColumnDefinition(node.getColumn()));
+            builder.append("ALTER TABLE ");
+            if (node.isTableNameExists()) {
+                builder.append("IF EXISTS ");
+            }
+            builder.append(node.getName())
+                    .append(" ADD COLUMN ");
+            if (node.isColumnNameNotExists()) {
+                builder.append("IF NOT EXISTS ");
+            }
+            builder.append(formatColumnDefinition(node.getColumn()));
 
             return null;
         }
