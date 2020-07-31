@@ -323,6 +323,10 @@ public abstract class AbstractTestDistributedQueries
 
         assertFalse(getQueryRunner().tableExists(getSession(), tableName));
         assertFalse(getQueryRunner().tableExists(getSession(), renamedTable));
+
+        assertUpdate("ALTER TABLE IF EXISTS " + tableName + " RENAME TO " + renamedTable);
+        assertFalse(getQueryRunner().tableExists(getSession(), tableName));
+        assertFalse(getQueryRunner().tableExists(getSession(), renamedTable));
     }
 
     @Test
@@ -375,6 +379,7 @@ public abstract class AbstractTestDistributedQueries
         assertUpdate("CREATE TABLE " + tableName + " AS SELECT 'some value' x", 1);
 
         assertUpdate("ALTER TABLE " + tableName + " RENAME COLUMN x TO y");
+        assertUpdate("ALTER TABLE " + tableName + " RENAME COLUMN IF EXISTS columnNotExists TO y");
         assertQuery("SELECT y FROM " + tableName, "VALUES 'some value'");
 
         assertUpdate("ALTER TABLE " + tableName + " RENAME COLUMN y TO Z"); // 'Z' is upper-case, not delimited
@@ -386,6 +391,10 @@ public abstract class AbstractTestDistributedQueries
         assertQuery("SELECT * FROM " + tableName, "VALUES 'some value'");
 
         assertUpdate("DROP TABLE " + tableName);
+        assertFalse(getQueryRunner().tableExists(getSession(), tableName));
+        assertUpdate("ALTER TABLE IF EXISTS " + tableName + " RENAME COLUMN columnNotExists TO y");
+        assertUpdate("ALTER TABLE IF EXISTS " + tableName + " RENAME COLUMN IF EXISTS columnNotExists TO y");
+        assertFalse(getQueryRunner().tableExists(getSession(), tableName));
     }
 
     @Test
@@ -395,9 +404,17 @@ public abstract class AbstractTestDistributedQueries
         assertUpdate("CREATE TABLE " + tableName + " AS SELECT 123 x, 111 a", 1);
 
         assertUpdate("ALTER TABLE " + tableName + " DROP COLUMN x");
+        assertUpdate("ALTER TABLE " + tableName + " DROP COLUMN IF EXISTS notExistColumn");
         assertQueryFails("SELECT x FROM " + tableName, ".* Column 'x' cannot be resolved");
 
         assertQueryFails("ALTER TABLE " + tableName + " DROP COLUMN a", ".* Cannot drop the only column in a table");
+
+        assertUpdate("DROP TABLE " + tableName);
+
+        assertFalse(getQueryRunner().tableExists(getSession(), tableName));
+        assertUpdate("ALTER TABLE IF EXISTS " + tableName + " DROP COLUMN notExistColumn");
+        assertUpdate("ALTER TABLE IF EXISTS " + tableName + " DROP COLUMN IF EXISTS notExistColumn");
+        assertFalse(getQueryRunner().tableExists(getSession(), tableName));
     }
 
     @Test
@@ -407,6 +424,7 @@ public abstract class AbstractTestDistributedQueries
         assertUpdate("CREATE TABLE " + tableName + " AS SELECT CAST('first' AS varchar) x", 1);
 
         assertQueryFails("ALTER TABLE " + tableName + " ADD COLUMN x bigint", ".* Column 'x' already exists");
+        assertUpdate("ALTER TABLE " + tableName + " ADD COLUMN IF NOT EXISTS x bigint");
         assertQueryFails("ALTER TABLE " + tableName + " ADD COLUMN X bigint", ".* Column 'X' already exists");
         assertQueryFails("ALTER TABLE " + tableName + " ADD COLUMN q bad_type", ".* Unknown type 'bad_type' for column 'q'");
 
@@ -423,6 +441,11 @@ public abstract class AbstractTestDistributedQueries
                 "VALUES ('first', NULL, NULL), ('second', 'xxx', NULL), ('third', 'yyy', 33.3)");
 
         assertUpdate("DROP TABLE " + tableName);
+
+        assertFalse(getQueryRunner().tableExists(getSession(), tableName));
+        assertUpdate("ALTER TABLE IF EXISTS " + tableName + " ADD COLUMN x bigint");
+        assertUpdate("ALTER TABLE IF EXISTS " + tableName + " ADD COLUMN IF NOT EXISTS x bigint");
+        assertFalse(getQueryRunner().tableExists(getSession(), tableName));
     }
 
     @Test

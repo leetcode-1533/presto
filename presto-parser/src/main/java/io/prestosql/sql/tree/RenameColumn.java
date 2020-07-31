@@ -28,23 +28,27 @@ public class RenameColumn
     private final QualifiedName table;
     private final Identifier source;
     private final Identifier target;
+    private final boolean tableNameExists;
+    private final boolean columnNameExists;
 
-    public RenameColumn(QualifiedName table, Identifier source, Identifier target)
+    public RenameColumn(QualifiedName table, Identifier source, Identifier target, boolean tableNameExists, boolean columnNameExists)
     {
-        this(Optional.empty(), table, source, target);
+        this(Optional.empty(), table, source, target, tableNameExists, columnNameExists);
     }
 
-    public RenameColumn(NodeLocation location, QualifiedName table, Identifier source, Identifier target)
+    public RenameColumn(NodeLocation location, QualifiedName table, Identifier source, Identifier target, boolean tableNameExists, boolean columnNameExists)
     {
-        this(Optional.of(location), table, source, target);
+        this(Optional.of(location), table, source, target, tableNameExists, columnNameExists);
     }
 
-    private RenameColumn(Optional<NodeLocation> location, QualifiedName table, Identifier source, Identifier target)
+    private RenameColumn(Optional<NodeLocation> location, QualifiedName table, Identifier source, Identifier target, boolean tableNameExists, boolean columnNameExists)
     {
         super(location);
         this.table = requireNonNull(table, "table is null");
         this.source = requireNonNull(source, "source is null");
         this.target = requireNonNull(target, "target is null");
+        this.tableNameExists = tableNameExists;
+        this.columnNameExists = columnNameExists;
     }
 
     public QualifiedName getTable()
@@ -60,6 +64,16 @@ public class RenameColumn
     public Identifier getTarget()
     {
         return target;
+    }
+
+    public boolean isTableNameExists()
+    {
+        return tableNameExists;
+    }
+
+    public boolean isColumnNameExists()
+    {
+        return columnNameExists;
     }
 
     @Override
