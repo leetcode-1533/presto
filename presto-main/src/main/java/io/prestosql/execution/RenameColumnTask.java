@@ -53,7 +53,7 @@ public class RenameColumnTask
         QualifiedObjectName tableName = createQualifiedObjectName(session, statement, statement.getTable());
         Optional<TableHandle> tableHandleOptional = metadata.getTableHandle(session, tableName);
         if (tableHandleOptional.isEmpty()) {
-            if (!statement.isTableNameExists()) {
+            if (!statement.isTableExists()) {
                 throw semanticException(TABLE_NOT_FOUND, statement, "Table '%s' does not exist", tableName);
             }
             return immediateFuture(null);
@@ -68,7 +68,7 @@ public class RenameColumnTask
         Map<String, ColumnHandle> columnHandles = metadata.getColumnHandles(session, tableHandle);
         ColumnHandle columnHandle = columnHandles.get(source);
         if (columnHandle == null) {
-            if (!statement.isColumnNameExists()) {
+            if (!statement.isColumnExists()) {
                 throw semanticException(COLUMN_NOT_FOUND, statement, "Column '%s' does not exist", source);
             }
             return immediateFuture(null);

@@ -28,27 +28,27 @@ public class RenameColumn
     private final QualifiedName table;
     private final Identifier source;
     private final Identifier target;
-    private final boolean tableNameExists;
-    private final boolean columnNameExists;
+    private final boolean tableExists;
+    private final boolean columnExists;
 
-    public RenameColumn(QualifiedName table, Identifier source, Identifier target, boolean tableNameExists, boolean columnNameExists)
+    public RenameColumn(QualifiedName table, Identifier source, Identifier target, boolean tableExists, boolean columnExists)
     {
-        this(Optional.empty(), table, source, target, tableNameExists, columnNameExists);
+        this(Optional.empty(), table, source, target, tableExists, columnExists);
     }
 
-    public RenameColumn(NodeLocation location, QualifiedName table, Identifier source, Identifier target, boolean tableNameExists, boolean columnNameExists)
+    public RenameColumn(NodeLocation location, QualifiedName table, Identifier source, Identifier target, boolean tableExists, boolean columnExists)
     {
-        this(Optional.of(location), table, source, target, tableNameExists, columnNameExists);
+        this(Optional.of(location), table, source, target, tableExists, columnExists);
     }
 
-    private RenameColumn(Optional<NodeLocation> location, QualifiedName table, Identifier source, Identifier target, boolean tableNameExists, boolean columnNameExists)
+    private RenameColumn(Optional<NodeLocation> location, QualifiedName table, Identifier source, Identifier target, boolean tableExists, boolean columnExists)
     {
         super(location);
         this.table = requireNonNull(table, "table is null");
         this.source = requireNonNull(source, "source is null");
         this.target = requireNonNull(target, "target is null");
-        this.tableNameExists = tableNameExists;
-        this.columnNameExists = columnNameExists;
+        this.tableExists = tableExists;
+        this.columnExists = columnExists;
     }
 
     public QualifiedName getTable()
@@ -66,14 +66,14 @@ public class RenameColumn
         return target;
     }
 
-    public boolean isTableNameExists()
+    public boolean isTableExists()
     {
-        return tableNameExists;
+        return tableExists;
     }
 
-    public boolean isColumnNameExists()
+    public boolean isColumnExists()
     {
-        return columnNameExists;
+        return columnExists;
     }
 
     @Override

@@ -27,26 +27,26 @@ public class AddColumn
 {
     private final QualifiedName name;
     private final ColumnDefinition column;
-    private final boolean tableNameExists;
-    private final boolean columnNameNotExists;
+    private final boolean tableExists;
+    private final boolean columnNotExists;
 
-    public AddColumn(QualifiedName name, ColumnDefinition column, boolean tableNameExists, boolean columnNameNotExists)
+    public AddColumn(QualifiedName name, ColumnDefinition column, boolean tableExists, boolean columnNotExists)
     {
-        this(Optional.empty(), name, column, tableNameExists, columnNameNotExists);
+        this(Optional.empty(), name, column, tableExists, columnNotExists);
     }
 
-    public AddColumn(NodeLocation location, QualifiedName name, ColumnDefinition column, boolean tableNameExists, boolean columnNameNotExists)
+    public AddColumn(NodeLocation location, QualifiedName name, ColumnDefinition column, boolean tableExists, boolean columnNotExists)
     {
-        this(Optional.of(location), name, column, tableNameExists, columnNameNotExists);
+        this(Optional.of(location), name, column, tableExists, columnNotExists);
     }
 
-    private AddColumn(Optional<NodeLocation> location, QualifiedName name, ColumnDefinition column, boolean tableNameExists, boolean columnNameNotExists)
+    private AddColumn(Optional<NodeLocation> location, QualifiedName name, ColumnDefinition column, boolean tableExists, boolean columnNotExists)
     {
         super(location);
         this.name = requireNonNull(name, "table is null");
         this.column = requireNonNull(column, "column is null");
-        this.tableNameExists = tableNameExists;
-        this.columnNameNotExists = columnNameNotExists;
+        this.tableExists = tableExists;
+        this.columnNotExists = columnNotExists;
     }
 
     public QualifiedName getName()
@@ -59,14 +59,14 @@ public class AddColumn
         return column;
     }
 
-    public boolean isTableNameExists()
+    public boolean isTableExists()
     {
-        return tableNameExists;
+        return tableExists;
     }
 
-    public boolean isColumnNameNotExists()
+    public boolean isColumnNotExists()
     {
-        return columnNameNotExists;
+        return columnNotExists;
     }
 
     @Override

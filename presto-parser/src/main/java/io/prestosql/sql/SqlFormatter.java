@@ -1079,12 +1079,12 @@ public final class SqlFormatter
         protected Void visitRenameColumn(RenameColumn node, Integer context)
         {
             builder.append("ALTER TABLE ");
-            if (node.isTableNameExists()) {
+            if (node.isTableExists()) {
                 builder.append("IF EXISTS ");
             }
             builder.append(node.getTable())
                     .append(" RENAME COLUMN ");
-            if (node.isColumnNameExists()) {
+            if (node.isColumnExists()) {
                 builder.append("IF EXISTS ");
             }
             builder.append(node.getSource())
@@ -1098,12 +1098,12 @@ public final class SqlFormatter
         protected Void visitDropColumn(DropColumn node, Integer context)
         {
             builder.append("ALTER TABLE ");
-            if (node.isTableNameExists()) {
+            if (node.isTableExists()) {
                 builder.append("IF EXISTS ");
             }
             builder.append(formatName(node.getTable()))
                     .append(" DROP COLUMN ");
-            if (node.isColumnNameExists()) {
+            if (node.isColumnExists()) {
                 builder.append("IF EXISTS ");
             }
             builder.append(formatExpression(node.getColumn()));
@@ -1124,12 +1124,12 @@ public final class SqlFormatter
         protected Void visitAddColumn(AddColumn node, Integer indent)
         {
             builder.append("ALTER TABLE ");
-            if (node.isTableNameExists()) {
+            if (node.isTableExists()) {
                 builder.append("IF EXISTS ");
             }
             builder.append(node.getName())
                     .append(" ADD COLUMN ");
-            if (node.isColumnNameNotExists()) {
+            if (node.isColumnNotExists()) {
                 builder.append("IF NOT EXISTS ");
             }
             builder.append(formatColumnDefinition(node.getColumn()));

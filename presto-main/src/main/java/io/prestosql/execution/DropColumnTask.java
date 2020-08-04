@@ -52,7 +52,7 @@ public class DropColumnTask
         Optional<TableHandle> tableHandleOptional = metadata.getTableHandle(session, tableName);
 
         if (tableHandleOptional.isEmpty()) {
-            if (!statement.isTableNameExists()) {
+            if (!statement.isTableExists()) {
                 throw semanticException(TABLE_NOT_FOUND, statement, "Table '%s' does not exist", tableName);
             }
             return immediateFuture(null);
@@ -65,7 +65,7 @@ public class DropColumnTask
 
         ColumnHandle columnHandle = metadata.getColumnHandles(session, tableHandle).get(column);
         if (columnHandle == null) {
-            if (!statement.isColumnNameExists()) {
+            if (!statement.isColumnExists()) {
                 throw semanticException(COLUMN_NOT_FOUND, statement, "Column '%s' does not exist", column);
             }
             return immediateFuture(null);
